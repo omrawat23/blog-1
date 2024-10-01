@@ -1,0 +1,94 @@
+import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { formatISO9075 } from "date-fns";
+import { useRecoilValue } from "recoil";
+import { Pencil, Calendar, User } from "lucide-react";
+import { authState } from "../authState";
+import Button from "./ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+
+export default function PostPage() {
+  const [postInfo, setPostInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { id } = useParams();
+  const { user } = useRecoilValue(authState);
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const response = await fetch(`http://localhost:4000/post/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch post');
+        }
+        const data = await response.json();
+        setPostInfo(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPost();
+  }, [id]);
+
+  if (loading) {
+    return <div className="container mx-auto px-4 py-8">...loading</div>;
+  }
+
+  if (error) {
+    return <div className="container mx-auto px-4 py-8">error</div>;
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <Card className="w-full max-w-3xl mx-auto">
+        <CardHeader>
+          <CardTitle className="text-3xl font-bold mb-2">{postInfo.title}</CardTitle>
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+              <Calendar className="h-4 w-4" />
+              <time dateTime={postInfo.createdAt}>
+                {formatISO9075(new Date(postInfo.createdAt))}
+              </time>
+            </div>
+            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+              <User className="h-4 w-4" />
+              <span>Author: @{user.email}</span>
+            </div>
+          </div>
+          {postInfo.summary && (
+            <p className="text-lg text-muted-foreground mt-2">
+              {postInfo.summary}
+            </p>
+          )}
+        </CardHeader>
+        <CardContent>
+          {postInfo.cover && (
+            <img
+              src={postInfo.cover}
+              alt={postInfo.title}
+              className="w-full h-64 object-cover rounded-lg mb-6"
+            />
+          )}
+          <div
+            className="prose prose-lg prose-invert max-w-none"
+            dangerouslySetInnerHTML={{ __html: postInfo.content }}
+          />
+          <div className="mt-6">
+            <Link to={`/edit/${postInfo._id}`}>
+              <Button variant="outline" className="flex items-center">
+                <Pencil className="w-4 h-4 mr-2" />
+                Edit Post
+              </Button>
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
