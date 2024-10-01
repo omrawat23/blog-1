@@ -194,6 +194,32 @@ app.put('/user/:userId/post/:id', upload.single('file'), authenticateToken, asyn
   }
 });
 
+//Delete a post for specific user
+app.delete('/user/:userId/post/:id', authenticateToken, async (req, res) => {
+  const { userId, id } = req.params;
+
+  try {
+    // Find the post by ID
+    const postDoc = await PostModel.findById(id);
+    if (!postDoc) {
+      return res.status(404).json({ error: 'Post not found' });
+    }
+
+    // Ensure the logged-in user is the author of the post
+    if (postDoc.author.toString() !== userId) {
+      return res.status(403).json({ error: 'You are not authorized to delete this post' });
+    }
+
+    // Delete the post document
+    await postDoc.remove(); // or use await PostModel.findByIdAndDelete(id);
+    
+    res.json({ message: 'Post deleted successfully' }); // Respond with success message
+  } catch (error) {
+    console.error('Error deleting post:', error);
+    res.status(500).json({ error: 'An error occurred while deleting the post' });
+  }
+});
+
 
 
 // GET a specific post

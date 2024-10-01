@@ -7,6 +7,8 @@ import Post from "../Post"
 import Button from "./ui/button"
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert"
 
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
 export default function IndexPage() {
   const { user } = useRecoilValue(authState)
   const [posts, setPosts] = useState([])
@@ -20,7 +22,7 @@ export default function IndexPage() {
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch(`http://localhost:4000/user/${user.uid}/posts`, {
+      const response = await fetch(`${apiBaseUrl}/user/${user.uid}/posts`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }

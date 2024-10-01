@@ -4,6 +4,8 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { authState, initializeAuthState } from '../authState';
 import Editor from "../Editor";
 
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
 export default function CreatePost() {
   const authStateValue = useRecoilValue(authState);
   const setAuthState = useSetRecoilState(authState);
@@ -35,7 +37,7 @@ export default function CreatePost() {
       data.set('file', files[0]);
     }
 
-    const response = await fetch(`http://localhost:4000/user/${user.uid}/post`, {
+    const response = await fetch(`${apiBaseUrl}/user/${user.uid}/post`, {
       method: 'POST',
       body: data,
       credentials: 'include',

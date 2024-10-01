@@ -9,9 +9,6 @@ import Button from "./components/ui/button";
 export default function PostCard({ _id, title, summary, cover, createdAt }) {
   const date = new Date(createdAt);
 
-  console.log("Created At:", createdAt);
-  console.log("Parsed Date:", date);
-
   return (
     <Card className="overflow-hidden transition-all hover:shadow-lg flex flex-col h-full">
       <Link to={`/post/${_id}`} className="block flex-shrink-0">

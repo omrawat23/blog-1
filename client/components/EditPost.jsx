@@ -6,6 +6,8 @@ import useAuth from "../useAuth";
 import Editor from "../Editor";
 import Button from "./ui/button"
 
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
 export default function EditPost() {
   const navigate = useNavigate();
   const { id } = useParams(); 
@@ -22,7 +24,7 @@ export default function EditPost() {
 
   useEffect(() => {
     const fetchPost = async () => {
-      const response = await fetch(`http://localhost:4000/post/${id}`, {
+      const response = await fetch(`${apiBaseUrl}/post/${id}`, {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -56,7 +58,7 @@ export default function EditPost() {
         data.set("file", files[0]);
       }
 
-      const response = await fetch(`http://localhost:4000/user/${user.uid}/post/${id}`, {
+      const response = await fetch(`${apiBaseUrl}/user/${user.uid}/post/${id}`, {
         method: "PUT",
         body: data,
         credentials: 'include',
@@ -78,7 +80,7 @@ export default function EditPost() {
 
   const deletePost = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/user/${user.uid}/post/${id}`, {
+      const response = await fetch(`${apiBaseUrl}/user/${user.uid}/post/${id}`, {
         method: "DELETE",
         credentials: 'include',
         headers: {

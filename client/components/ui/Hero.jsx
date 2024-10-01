@@ -7,6 +7,8 @@ import Button from './button';
 import { Link, useNavigate } from 'react-router-dom';
 import blog from '../../src/assets/blog.gif';
 
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
 export default function HeroSection() {
   const authStateValue = useRecoilValue(authState);
   const setAuthState = useSetRecoilState(authState);
@@ -17,7 +19,7 @@ export default function HeroSection() {
     try {
       const result = await signInWithPopup(auth, provider);
       const token = await result.user.getIdToken();
-      const response = await fetch('http://localhost:4000/verifyToken', {
+      const response = await fetch(`${apiBaseUrl}/verifyToken`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

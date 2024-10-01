@@ -14,19 +14,20 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export default function Header() {
     const authStateValue = useRecoilValue(authState);
     const setAuthState = useSetRecoilState(authState);
     const provider = new GoogleAuthProvider();
     const navigate = useNavigate();
-    const { theme, toggleTheme } = useTheme();
+    const { theme } = useTheme();
 
     const handleSignIn = async () => {
         try {
             const result = await signInWithPopup(auth, provider);
             const token = await result.user.getIdToken();
-            const response = await fetch('http://localhost:4000/verifyToken', {
+            const response = await fetch(`${apiBaseUrl}/verifyToken`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

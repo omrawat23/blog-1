@@ -7,6 +7,8 @@ import { authState } from "../authState";
 import Button from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
 export default function PostPage() {
   const [postInfo, setPostInfo] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -17,7 +19,7 @@ export default function PostPage() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/post/${id}`, {
+        const response = await fetch(`${apiBaseUrl}/post/${id}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
