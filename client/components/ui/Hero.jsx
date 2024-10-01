@@ -17,39 +17,40 @@ export default function HeroSection() {
 
   const handleSignIn = async () => {
     try {
-      const result = await signInWithPopup(auth, provider);
-      const token = await result.user.getIdToken();
-      const response = await fetch(`${apiBaseUrl}/verifyToken`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-      });
-      
-      if (!response.ok) {
-        throw new Error('Token verification failed');
-      }
+        const result = await signInWithPopup(auth, provider);
+        const token = await result.user.getIdToken();
 
-      localStorage.setItem('token', token);
+        localStorage.setItem('token', token);
 
-      setAuthState({
-        isAuthenticated: true,
-        user: {
-          username: result.user.displayName,
-          photoURL: result.user.photoURL,
-          email: result.user.email,
-          uid: result.user.uid,
+        // Immediately set the auth state after login
+        setAuthState({
+            isAuthenticated: true,
+            user: {
+                username: result.user.displayName,
+                photoURL: result.user.photoURL,
+                email: result.user.email,
+                uid: result.user.uid,
+            }
+        });
+
+        // Fetch token verification
+        const response = await fetch(`${apiBaseUrl}/verifyToken`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+        
+        if (!response.ok) {
+            throw new Error('Token verification failed');
         }
-      });
 
-      navigate('/');
-
+        navigate('/');
     } catch (error) {
-      console.error('Error signing in:', error);
-      alert('Failed to sign in. Please try again.');
+        console.error('Error signing in:', error);
     }
-  };
+};
 
   return (
     <section className="mx-auto max-w-screen-xl px-4 sm:px-6 sm:mt-16 lg:px-8 py-12 md:py-24 lg:py-32 xl:py-48 bg-background">

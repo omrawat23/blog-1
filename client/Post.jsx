@@ -16,7 +16,8 @@ export default function PostCard({ _id, title, summary, cover, createdAt }) {
           <img
             src={cover}
             alt={title}
-            className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+            className="h-48 w-48 object-cover transition-transform duration-300 hover:scale-105"
+
           />
         </div>
       </Link>
@@ -36,7 +37,7 @@ export default function PostCard({ _id, title, summary, cover, createdAt }) {
               <time dateTime={createdAt}>{formatDistanceToNow(date, { addSuffix: true })}</time>
             )}
           </div>
-          <Button variant="ghost" size="sm" asChild>
+          <Button>
             <Link to={`/post/${_id}`}>Read More</Link>
           </Button>
         </div>

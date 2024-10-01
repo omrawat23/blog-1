@@ -101,7 +101,7 @@ export default function EditPost() {
   };
 
   if (redirectToHome) {
-    return <Navigate to="/" />;
+    return <Navigate to="/home" />;
   }
 
   if (redirect) {

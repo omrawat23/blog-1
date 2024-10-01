@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '../ui/button'
+import Button from '../ui/button';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { authState } from '../../authState'; 
 import { auth } from '../../firebase'; 
@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export default function Header() {
@@ -27,20 +28,10 @@ export default function Header() {
         try {
             const result = await signInWithPopup(auth, provider);
             const token = await result.user.getIdToken();
-            const response = await fetch(`${apiBaseUrl}/verifyToken`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-            });
-            
-            if (!response.ok) {
-                throw new Error('Token verification failed');
-            }
-
+    
             localStorage.setItem('token', token);
-
+    
+            // Immediately set the auth state after login
             setAuthState({
                 isAuthenticated: true,
                 user: {
@@ -50,13 +41,26 @@ export default function Header() {
                     uid: result.user.uid,
                 }
             });
-
+    
+            // Fetch token verification
+            const response = await fetch(`${apiBaseUrl}/verifyToken`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            
+            if (!response.ok) {
+                throw new Error('Token verification failed');
+            }
+    
             navigate('/');
         } catch (error) {
             console.error('Error signing in:', error);
-            alert('Failed to sign in. Please try again.');
         }
     };
+    
 
     const handleSignOut = async () => {
         try {
@@ -85,7 +89,7 @@ export default function Header() {
                     </div>
 
                     <div className="flex items-center gap-6">
-                    <Example />
+                        <Example />
                         {authStateValue.isAuthenticated ? (
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
@@ -97,29 +101,27 @@ export default function Header() {
                                     </button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="ml-10 mt-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded shadow-lg">
-                                <DropdownMenuItem asChild className="hover:bg-gray-100 dark:hover:bg-gray-700">
-                                    <Link to="/" className="block px-4 py-2 text-black dark:text-white">Home</Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem asChild className="hover:bg-gray-100 dark:hover:bg-gray-700">
-                                    <Link to="/create" className="block px-4 py-2 text-black dark:text-white">Create Post</Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem asChild className="hover:bg-gray-100 dark:hover:bg-gray-700">
-                                    <Link to="/home" className="block px-4 py-2 text-black dark:text-white">Your Posts</Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={handleSignOut} className="hover:bg-gray-100 dark:hover:bg-gray-700">
-                                    <span className="block px-2 pb-2 text-black dark:text-white">Log Out</span>
-                                </DropdownMenuItem>
+                                    <DropdownMenuItem asChild className="hover:bg-gray-100 dark:hover:bg-gray-700">
+                                        <Link to="/" className="block px-4 py-2 text-black dark:text-white">Home</Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem asChild className="hover:bg-gray-100 dark:hover:bg-gray-700">
+                                        <Link to="/create" className="block px-4 py-2 text-black dark:text-white">Create Post</Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem asChild className="hover:bg-gray-100 dark:hover:bg-gray-700">
+                                        <Link to="/home" className="block px-4 py-2 text-black dark:text-white">Your Posts</Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={handleSignOut} className="hover:bg-gray-100 dark:hover:bg-gray-700">
+                                        <span className="block px-2 pb-2 text-black dark:text-white">Log Out</span>
+                                    </DropdownMenuItem>
                                 </DropdownMenuContent>
-
-
                             </DropdownMenu>
                         ) : (
                             <Button 
-                            onClick={handleSignIn}
-                            className="h-11 flex items-center justify-center"
-                          >
-                            <span className="mt-1">Log In</span>
-                          </Button>
+                                onClick={handleSignIn}
+                                className="h-11 flex items-center justify-center"
+                            >
+                                <span className="mt-1">Log In</span>
+                            </Button>
                         )}
                     </div>
                 </div>

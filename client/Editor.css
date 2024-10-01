@@ -8,11 +8,17 @@
     stroke: white; /* Change the color of icons if necessary */
   }
   
-  .ql-toolbar .ql-picker, 
   .ql-toolbar .ql-formats {
-    color: white; /* Set color for dropdowns and formats */
+    color: black; /* Set color for dropdowns and formats */
+  }
+
+  .ql-toolbar .ql-picker{
+    color: white;
   }
   
+  .ql-snow .ql-picker-options {
+    color: black;
+  }
 
   /* Set content text color to white */
 .ql-editor {

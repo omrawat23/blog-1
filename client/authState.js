@@ -13,8 +13,10 @@ export const initializeAuthState = selector({
   key: 'initializeAuthState',
   get: async () => {
     return new Promise((resolve) => {
-      const unsubscribe = auth.onAuthStateChanged((user) => {
+      const unsubscribe = auth.onAuthStateChanged(async (user) => {
         if (user) {
+          const token = await user.getIdToken(); // Get the token
+          localStorage.setItem('token', token); // Store the token in local storage
           resolve({
             isAuthenticated: true,
             user: {
@@ -25,6 +27,7 @@ export const initializeAuthState = selector({
             },
           });
         } else {
+          localStorage.removeItem('token'); // Clear the token if the user is logged out
           resolve({
             isAuthenticated: false,
             user: null,
