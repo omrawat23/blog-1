@@ -15,20 +15,31 @@ export default function IndexPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [hasMore, setHasMore] = useState(true)
-  const { ref, inView } = useInView()
-  const initialFetchDone = useRef(false)
+  const { ref } = useInView()
 
   const fetchPosts = async () => {
-    if (loading || !hasMore) return
+    if (loading || !hasMore || !user) return
+    
     setLoading(true)
     setError(null)
+    
     try {
+      const token = localStorage.getItem('token')
+      if (!token) throw new Error('Authentication token not found')
+
       const response = await fetch(`${apiBaseUrl}/user/${user.uid}/posts`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${token}`
         }
       })
-      if (!response.ok) throw new Error('Failed to fetch posts')
+      
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Session expired. Please login again.')
+        }
+        throw new Error('Failed to fetch posts')
+      }
+      
       const newPosts = await response.json()
       setPosts((prevPosts) => {
         const uniqueNewPosts = newPosts.filter(
@@ -45,11 +56,12 @@ export default function IndexPage() {
   }
 
   useEffect(() => {
-    if (!initialFetchDone.current || (inView && posts.length > 0)) {
+    // Only fetch if user is available
+    if (user) {
       fetchPosts()
-      initialFetchDone.current = true
     }
-  }, [inView, posts.length])
+  }, [user]) // Added user as dependency
+
 
   return (
     <main className="container mx-auto px-4 py-8">

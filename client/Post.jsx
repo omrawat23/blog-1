@@ -11,7 +11,7 @@ export default function PostCard({ _id, title, summary, cover, createdAt }) {
   return (
     <Card className="overflow-hidden transition-all hover:shadow-lg flex flex-col h-full">
       <Link to={`/post/${_id}`} className="block flex-shrink-0">
-      <div className="relative pt-[56.25%]">
+      <div className="relative" style={{height: '400px' }}>
           <img
             src={cover}
             alt={title}
