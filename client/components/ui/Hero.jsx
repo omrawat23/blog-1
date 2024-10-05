@@ -62,7 +62,7 @@ export default function HeroSection() {
                 Blog Your Way
               </h1>
               <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                Join a thriving community of writers and readers. Craft your thoughts into blogs, manage your content effortlessly, update and share your blogs.
+                Craft your thoughts into blogs, manage your content effortlessly, update and share your blogs.
               </p>
             </div>
             <div className="flex flex-col gap-2 min-[400px]:flex-row">

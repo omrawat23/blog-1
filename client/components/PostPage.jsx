@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { formatISO9075 } from "date-fns";
 import { useRecoilValue } from "recoil";
-import { Pencil, Calendar, User } from "lucide-react";
+import { Pencil, Calendar, User, Share2 } from "lucide-react";
 import { authState } from "../authState";
 import Button from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
@@ -13,6 +13,7 @@ export default function PostPage() {
   const [postInfo, setPostInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [shareablePost, setShareablePost] = useState(null);
   const { id } = useParams();
   const { user } = useRecoilValue(authState);
 
@@ -38,12 +39,18 @@ export default function PostPage() {
     fetchPost();
   }, [id]);
 
+  const handleSharePost = () => {
+    const shareLink = `${apiBaseUrl}/post/${postInfo._id}`;
+    alert(`Post shared! Link: ${shareLink}`);
+  };
+  
+
   if (loading) {
     return <div className="container mx-auto px-4 py-8">...loading</div>;
   }
 
   if (error) {
-    return <div className="container mx-auto px-4 py-8">error</div>;
+    return <div className="container mx-auto px-4 py-8">Error: {error}</div>;
   }
 
   return (
@@ -81,11 +88,17 @@ export default function PostPage() {
             className="prose prose-lg prose-invert max-w-none"
             dangerouslySetInnerHTML={{ __html: postInfo.content }}
           />
-          <div className="mt-6">
+          <div className="mt-6 flex flex-row justify-start space-x-4">
             <Link to={`/edit/${postInfo._id}`}>
               <Button variant="outline" className="flex items-center">
                 <Pencil className="w-4 h-4 mr-2" />
                 Edit Post
+              </Button>
+            </Link>
+            <Link to={``} onClick={handleSharePost}>
+              <Button variant="outline" className="flex items-center">
+                <Share2 className="w-4 h-4 mr-2" />
+                Share Post
               </Button>
             </Link>
           </div>

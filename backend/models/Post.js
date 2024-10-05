@@ -8,6 +8,7 @@ const PostSchema = new Schema({
   content: { type: String, required: true }, // Main content of the post
   cover: { type: String },                    // Cover image URL
   author: { type: String, required: true },  // Author's UID
+  email: { type: String, required: true },
 }, {
   timestamps: true,                          // Automatically manages createdAt and updatedAt fields
 });

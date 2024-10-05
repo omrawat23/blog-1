@@ -10,6 +10,7 @@ import EditPost from '../components/EditPost';
 import HeroSection from '../components/ui/Hero';
 import Footer from '../components/ui/Footer';
 import { ThemeProvider } from '../ThemeContext';
+import BlogPost from '../components/ShareBlog';
 
 
 function AuthInitializer({ children }) {
@@ -52,6 +53,7 @@ function App() {
               <Route path='/create' element={<CreatePost />} />
               <Route path='/post/:id' element={<PostPage />} />
               <Route path='/edit/:id' element={<EditPost />} />
+              <Route path='/post/:id/share' element={<BlogPost />} />
             </Routes>
           </Router>
         </ThemeProvider>

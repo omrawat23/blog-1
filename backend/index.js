@@ -142,7 +142,7 @@ app.post('/user/:userId/post', upload.single('file'), authenticateToken, async (
       imageUrl = await getDownloadURL(storageRef);
     }
 
-    // Create the post document
+    // Create the post document, including user email
     const postDoc = await PostModel.create({
       userId: req.user.uid, // Save the user's UID as userId
       title,
@@ -150,6 +150,7 @@ app.post('/user/:userId/post', upload.single('file'), authenticateToken, async (
       content,
       cover: imageUrl || null, // Use uploaded image URL if available
       author: req.user.uid,     // Author is the UID of the logged-in user
+      email: req.user.email,    // Add user email to the post document
     });
 
     res.status(201).json(postDoc); // Respond with the created post
@@ -223,7 +224,7 @@ app.delete('/user/:userId/post/:id', authenticateToken, async (req, res) => {
 
 
 // GET a specific post
-app.get('/post/:id', authenticateToken, async (req, res) => {
+app.get('/post/:id', async (req, res) => {
   const { id } = req.params; 
 
 
@@ -246,6 +247,45 @@ app.get('/post/:id', authenticateToken, async (req, res) => {
   }
 });
 
+
+app.get('/user/:userId/post/:id/share', authenticateToken, async (req, res) => {
+  const { userId, id } = req.params;
+
+  try {
+    // Validate the ID
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid post ID' });
+    }
+
+    // Find the post by ID
+    const postDoc = await PostModel.findById(id).populate('author', ['username']);
+    
+    if (!postDoc) {
+      return res.status(404).json({ error: 'Post not found' });
+    }
+
+    // Ensure the logged-in user is allowed to share this post
+    if (postDoc.userId !== userId) {
+      return res.status(403).json({ error: 'You are not authorized to share this post' });
+    }
+
+    // Format the post details for sharing
+    const shareablePost = {
+      title: postDoc.title,
+      summary: postDoc.summary,
+      content: postDoc.content,
+      cover: postDoc.cover,
+      author: postDoc.author.username,
+      shareLink: `http://localhost:4000/post/${id}/share`, // Adjust the link as needed
+    };
+
+    // Respond with the formatted shareable post
+    res.json(shareablePost);
+  } catch (error) {
+    console.error('Error sharing post:', error);
+    res.status(500).json({ error: 'An error occurred while sharing the post' });
+  }
+});
 
 
 
