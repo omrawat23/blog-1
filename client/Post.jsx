@@ -1,6 +1,5 @@
 import React from 'react';
 import { formatDistanceToNow } from 'date-fns';
-import {formatISO9075} from "date-fns";
 import { Link } from 'react-router-dom';
 import { Card, CardFooter, CardHeader } from "./components/ui/card";
 import { CalendarIcon } from "lucide-react";
@@ -12,11 +11,11 @@ export default function PostCard({ _id, title, summary, cover, createdAt }) {
   return (
     <Card className="overflow-hidden transition-all hover:shadow-lg flex flex-col h-full">
       <Link to={`/post/${_id}`} className="block flex-shrink-0">
-        <div className="aspect-video w-full overflow-hidden">
+      <div className="relative pt-[56.25%]">
           <img
             src={cover}
             alt={title}
-            className="h-48 w-48 object-cover transition-transform duration-300 hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
 
           />
         </div>
@@ -32,7 +31,7 @@ export default function PostCard({ _id, title, summary, cover, createdAt }) {
           <div className="flex items-center text-sm text-muted-foreground">
             <CalendarIcon className="mr-1 h-4 w-4" />
             {isNaN(date.getTime()) ? (
-              <span>Invalid date</span> // Handle invalid date
+              <span>Invalid date</span> 
             ) : (
               <time dateTime={createdAt}>{formatDistanceToNow(date, { addSuffix: true })}</time>
             )}

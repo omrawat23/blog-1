@@ -13,14 +13,17 @@ export default function PostPage() {
   const [postInfo, setPostInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [shareablePost, setShareablePost] = useState(null);
   const { id } = useParams();
   const { user } = useRecoilValue(authState);
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await fetch(`${apiBaseUrl}/post/${id}`);
+        const response = await fetch(`${apiBaseUrl}/post/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
         if (!response.ok) {
           throw new Error('Failed to fetch post');
         }
@@ -36,7 +39,7 @@ export default function PostPage() {
   }, [id]);
 
   const handleSharePost = () => {
-    const shareLink = `https://barneyy.vercel.app/post/${postInfo._id}/share`;
+    const shareLink = `http://barneyy.vercel.app/post/${postInfo._id}/share`;
     alert(`Post shared! Link: ${shareLink}`);
   };
   
@@ -73,6 +76,7 @@ export default function PostPage() {
           )}
         </CardHeader>
         <CardContent>
+          
           {postInfo.cover && (
             <img
               src={postInfo.cover}

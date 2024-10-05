@@ -5,9 +5,11 @@ import { Loader2 } from "lucide-react"
 import { authState } from '../authState'
 import Post from "../Post"
 import Button from "./ui/button"
+import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert"
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
 
 export default function IndexPage() {
   const { user } = useRecoilValue(authState)
