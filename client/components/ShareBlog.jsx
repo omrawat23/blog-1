@@ -14,7 +14,6 @@ const ShareButton = ({ children, onClick }) => (
 
 export default function BlogPost() {
   const { id } = useParams();
-
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

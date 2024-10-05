@@ -53,7 +53,7 @@ function App() {
               <Route path='/create' element={<CreatePost />} />
               <Route path='/post/:id' element={<PostPage />} />
               <Route path='/edit/:id' element={<EditPost />} />
-              <Route path='/post/:id/share' element={<BlogPost />} />
+              <Route path='/:id/share' element={<BlogPost />} />
             </Routes>
           </Router>
         </ThemeProvider>
