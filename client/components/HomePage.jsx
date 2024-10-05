@@ -1,15 +1,13 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useInView } from "react-intersection-observer"
 import { useRecoilValue } from 'recoil'
 import { Loader2 } from "lucide-react"
 import { authState } from '../authState'
 import Post from "../Post"
 import Button from "./ui/button"
-import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert"
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
-
 
 export default function IndexPage() {
   const { user } = useRecoilValue(authState)
@@ -18,6 +16,7 @@ export default function IndexPage() {
   const [error, setError] = useState(null)
   const [hasMore, setHasMore] = useState(true)
   const { ref, inView } = useInView()
+  const initialFetchDone = useRef(false)
 
   const fetchPosts = async () => {
     if (loading || !hasMore) return
@@ -46,14 +45,11 @@ export default function IndexPage() {
   }
 
   useEffect(() => {
-    fetchPosts()
-  }, [])
-
-  useEffect(() => {
-    if (inView) {
+    if (!initialFetchDone.current || (inView && posts.length > 0)) {
       fetchPosts()
+      initialFetchDone.current = true
     }
-  }, [inView])
+  }, [inView, posts.length])
 
   return (
     <main className="container mx-auto px-4 py-8">
