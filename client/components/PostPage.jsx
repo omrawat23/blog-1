@@ -40,7 +40,7 @@ export default function PostPage() {
   }, [id]);
 
   const handleSharePost = () => {
-    const shareLink = `${apiBaseUrl}/post/${postInfo._id}`;
+    const shareLink = `https://barneyy.vercel.app/post/${postInfo._id}/share`;
     alert(`Post shared! Link: ${shareLink}`);
   };
   

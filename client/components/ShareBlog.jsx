@@ -36,11 +36,10 @@ export default function BlogPost() {
         setLoading(false);
       }
     };
-    
-    if (id) {
+
       fetchPost();
-    }
-  }, [id]);
+
+  }, []);
 
   const shareUrl = window.location.href;
 
