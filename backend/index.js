@@ -276,7 +276,7 @@ app.get('/user/:userId/post/:id/share', authenticateToken, async (req, res) => {
       content: postDoc.content,
       cover: postDoc.cover,
       author: postDoc.author.username,
-      shareLink: `http://localhost:4000/post/${id}/share`, // Adjust the link as needed
+      shareLink: `https://barneyy.vercel.app/post/${id}/share`, // Adjust the link as needed
     };
 
     // Respond with the formatted shareable post
