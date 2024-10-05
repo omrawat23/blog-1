@@ -21,7 +21,11 @@ export default function BlogPost() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await fetch(`${apiBaseUrl}/post/${id}`);
+        const response = await fetch(`${apiBaseUrl}/post/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
         if (!response.ok) {
           throw new Error('Failed to fetch post');
         }
@@ -36,10 +40,8 @@ export default function BlogPost() {
         setLoading(false);
       }
     };
-
       fetchPost();
-
-  }, []);
+  }, [id]);
 
   const shareUrl = window.location.href;
 
