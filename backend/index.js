@@ -48,7 +48,7 @@ const storage = getStorage();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: 'https://barneyy.vercel.app',
+  origin: 'https://bloggifyy.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
