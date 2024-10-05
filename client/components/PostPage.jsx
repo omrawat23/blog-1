@@ -20,11 +20,7 @@ export default function PostPage() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await fetch(`${apiBaseUrl}/post/${id}`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
+        const response = await fetch(`${apiBaseUrl}/post/${id}`);
         if (!response.ok) {
           throw new Error('Failed to fetch post');
         }
